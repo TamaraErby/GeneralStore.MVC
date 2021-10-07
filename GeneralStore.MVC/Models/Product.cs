@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 
@@ -18,5 +19,10 @@ namespace GeneralStore.MVC.Models
         public decimal Price { get; set; }
         [Required]
         public bool IsFood { get; set; }
+    }
+
+    public class ProductDbContext : DbContext
+    {
+        public DbSet<Product> Products { get; set; }
     }
 }

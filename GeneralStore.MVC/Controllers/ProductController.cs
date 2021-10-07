@@ -9,12 +9,58 @@ namespace GeneralStore.MVC.Controllers
 {
     public class ProductController : Controller
     {
-        private ApplicationDbContext _db = new ApplicationDbContext();
+        private ProductDbContext _db = new ProductDbContext();
 
         // GET: Product
         public ActionResult Index()
         {
             return View(_db.Products.ToList());
+        }
+
+        // GET : Product/Create
+        public ActionResult Create()
+        {
+            return View();
+        }
+
+        // POST : Product/Create
+        [HttpPost]
+        public ActionResult Create(Product product)
+        {
+            if (ModelState.IsValid)
+            {
+                _db.Products.Add(product);
+                _db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+
+            return View(product);
+        }
+
+        // GET : Product/Delete/{id}
+        public ActionResult Delete(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(System.Net.HttpStatusCode.BadRequest);
+            }
+            Product product = _db.Products.Find(id);
+            if (product == null)
+            {
+                return HttpNotFound();
+            }
+            return View(product);
+        }
+
+        //POST : Product/Delete/{id}
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public ActionResult Delete(int id)
+        {
+            Product product = _db.Products.Find(id);
+            _db.Products.Remove(product);
+            _db.SaveChanges();
+            return RedirectToAction("Index");
         }
     }
 }
